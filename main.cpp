@@ -14,7 +14,7 @@ namespace {
 
 constexpr std::size_t kNumClasses = 10;
 constexpr std::size_t kNumPixels = 784;
-constexpr std::size_t kModelRowSize = kNumPixels + 1;  // bias + features
+constexpr std::size_t kModelRowSize = kNumPixels + 1;  
 
 std::vector<double> loadWeights(const std::string& path) {
     std::ifstream input(path);
@@ -43,7 +43,7 @@ int predictClass(const std::vector<double>& weights, const std::vector<double>& 
     int bestClass = 0;
 
     for (std::size_t cls = 0; cls < kNumClasses; ++cls) {
-        double score = row[0];  // bias term
+        double score = row[0];  
         for (std::size_t i = 0; i < kNumPixels; ++i) {
             score += row[i + 1] * features[i];
         }
@@ -65,21 +65,21 @@ bool parseCsvLine(const std::string& line, int& label, std::vector<double>& feat
 
     label = static_cast<int>(std::strtol(ptr, &endPtr, 10));
     if (endPtr == ptr) {
-        return false;  // failed to read label
+        return false;  
     }
 
     ptr = endPtr;
     if (*ptr == ',') {
         ++ptr;
     } else if (*ptr != '\0') {
-        return false;  // malformed separator
+        return false;  
     }
 
     constexpr double inv255 = 1.0 / 255.0;
     for (std::size_t i = 0; i < kNumPixels; ++i) {
         long value = std::strtol(ptr, &endPtr, 10);
         if (endPtr == ptr) {
-            return false;  // failed to read pixel
+            return false;  
         }
 
         features[i] = static_cast<double>(value) * inv255;
@@ -98,7 +98,7 @@ bool parseCsvLine(const std::string& line, int& label, std::vector<double>& feat
     return true;
 }
 
-}  // namespace
+} 
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
