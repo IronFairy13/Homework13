@@ -1,0 +1,11 @@
+{
+    "cmake.configureSettings": {
+    "CMAKE_CXX_STANDARD": "17"
+},
+    "files.associations": {
+        "cstdint": "cpp",
+        "new": "cpp",
+        "iostream": "cpp",
+        "atomic": "cpp"
+    }
+}

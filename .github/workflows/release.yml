@@ -1,0 +1,56 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Prepare bundle
+        run: |
+          mkdir -p dist
+          cp build/fashion_mnist dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fashion_mnist-binaries
+          path: dist/fashion_mnist
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fashion_mnist-binaries
+          path: dist
+
+      - name: Create archive
+        run: |
+          cd dist
+          tar czf fashion_mnist-linux.tar.gz fashion_mnist
+
+      - name: Publish GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: dist/fashion_mnist-linux.tar.gz
+          token: ${{ secrets.GITHUB_TOKEN }}
