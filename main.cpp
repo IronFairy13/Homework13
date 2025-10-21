@@ -34,6 +34,7 @@ std::vector<double> loadWeights(const std::string& path) {
         throw std::runtime_error("Unexpected number of coefficients in model file: " + path);
     }
 
+    
     return weights;
 }
 
